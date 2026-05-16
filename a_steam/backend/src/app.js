@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const loggerMiddleware = require('./middlewares/logger.middleware');
 const { notFound, errorHandler } = require('./middlewares/error.middleware');
@@ -29,6 +30,9 @@ app.use(loggerMiddleware);
 // JSON Parsing Middleware
 app.use(express.json({ limit: '16kb' }));
 app.use(express.urlencoded({ extended: true, limit: '16kb' }));
+
+// Cookie Parsing Middleware
+app.use(cookieParser());
 
 // Health Route
 app.get('/api/v1/health', (req, res) => {
