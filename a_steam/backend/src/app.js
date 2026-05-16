@@ -48,8 +48,8 @@ app.get('/api/v1/system', (req, res) => {
     }, 'System info retrieved successfully'));
 });
 
-// Example route mounting (to be expanded)
-// app.use('/api/v1/games', gameRoutes);
+const routes = require('./routes/index');
+app.use('/api/v1', routes);
 
 // Error Handling Middleware
 app.use(notFound);

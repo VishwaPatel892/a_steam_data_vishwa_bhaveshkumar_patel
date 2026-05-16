@@ -3,9 +3,15 @@ const { buildFilter } = require("../utils/filterBuilder");
 
 const getAllGames = async (query, { page, limit, skip }) => {
   const filter = buildFilter(query, ["genre", "developer", "publisher"]);
+  
+  // Exclude archived games by default unless explicitly asked
+  if (query.includeArchived !== 'true') {
+    filter.isArchived = { $ne: true };
+  }
+
   const [games, total] = await Promise.all([
     Game.find(filter)
-      .populate("genre developer publisher", "name")
+      .populate("genre developer publisher", "name slug")
       .skip(skip)
       .limit(limit)
       .lean(),
@@ -14,8 +20,8 @@ const getAllGames = async (query, { page, limit, skip }) => {
   return { games, total, page, limit, pages: Math.ceil(total / limit) };
 };
 
-const getGameById = async (id) => {
-  const game = await Game.findById(id)
+const getGameByAppId = async (appid) => {
+  const game = await Game.findOne({ steamAppId: appid })
     .populate("genre developer publisher", "name")
     .lean();
   if (!game) {
@@ -30,8 +36,21 @@ const createGame = async (data) => {
   return Game.create(data);
 };
 
-const updateGame = async (id, data) => {
-  const game = await Game.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+const updateGameByAppId = async (appid, data) => {
+  const updateData = { ...data };
+  
+  // Track update in history
+  const historyEntry = {
+    action: "UPDATE",
+    details: "Game details updated",
+  };
+
+  const game = await Game.findOneAndUpdate(
+    { steamAppId: appid },
+    { $set: updateData, $push: { history: historyEntry } },
+    { new: true, runValidators: true }
+  );
+
   if (!game) {
     const error = new Error("Game not found");
     error.statusCode = 404;
@@ -40,8 +59,8 @@ const updateGame = async (id, data) => {
   return game;
 };
 
-const deleteGame = async (id) => {
-  const game = await Game.findByIdAndDelete(id);
+const deleteGameByAppId = async (appid) => {
+  const game = await Game.findOneAndDelete({ steamAppId: appid });
   if (!game) {
     const error = new Error("Game not found");
     error.statusCode = 404;
@@ -56,9 +75,105 @@ const searchGames = async (query) => {
       { name: { $regex: query, $options: "i" } },
       { tags: { $in: [new RegExp(query, "i")] } },
     ],
+    isArchived: { $ne: true }
   })
     .limit(20)
     .lean();
 };
 
-module.exports = { getAllGames, getGameById, createGame, updateGame, deleteGame, searchGames };
+const getSummary = async (appid) => {
+  const game = await Game.findOne({ steamAppId: appid })
+    .populate("genre", "name")
+    .lean();
+    
+  if (!game) {
+    const error = new Error("Game not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Calculate summary metrics
+  return {
+    steamAppId: game.steamAppId,
+    name: game.name,
+    price: game.price,
+    isFree: game.isFree,
+    reviewCount: game.reviewCount,
+    genres: game.genre.map(g => g.name),
+    revenueEstimate: game.price * game.reviewCount * 30, // Rough estimate algorithm
+  };
+};
+
+const getHistory = async (appid) => {
+  const game = await Game.findOne({ steamAppId: appid }).select('history').lean();
+  if (!game) {
+    const error = new Error("Game not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  return game.history || [];
+};
+
+const archiveGame = async (appid) => {
+  const game = await Game.findOneAndUpdate(
+    { steamAppId: appid },
+    { 
+      $set: { isArchived: true },
+      $push: { history: { action: "ARCHIVE", details: "Game was archived" } }
+    },
+    { new: true }
+  );
+  
+  if (!game) {
+    const error = new Error("Game not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  return game;
+};
+
+const restoreGame = async (appid) => {
+  const game = await Game.findOneAndUpdate(
+    { steamAppId: appid },
+    { 
+      $set: { isArchived: false },
+      $push: { history: { action: "RESTORE", details: "Game was restored" } }
+    },
+    { new: true }
+  );
+  
+  if (!game) {
+    const error = new Error("Game not found");
+    error.statusCode = 404;
+    throw error;
+  }
+  return game;
+};
+
+const getRandomGame = async () => {
+  const games = await Game.aggregate([
+    { $match: { isArchived: { $ne: true } } },
+    { $sample: { size: 1 } }
+  ]);
+  
+  if (!games || games.length === 0) {
+    const error = new Error("No games available");
+    error.statusCode = 404;
+    throw error;
+  }
+  return games[0];
+};
+
+module.exports = { 
+  getAllGames, 
+  getGameByAppId, 
+  createGame, 
+  updateGameByAppId, 
+  deleteGameByAppId, 
+  searchGames,
+  getSummary,
+  getHistory,
+  archiveGame,
+  restoreGame,
+  getRandomGame
+};

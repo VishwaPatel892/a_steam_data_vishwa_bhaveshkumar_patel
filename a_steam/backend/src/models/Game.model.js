@@ -31,6 +31,14 @@ const gameSchema = new mongoose.Schema(
     reviewCount: { type: Number, default: 0 },
     metacriticScore: { type: Number, min: 0, max: 100 },
     website: { type: String, default: "" },
+    isArchived: { type: Boolean, default: false },
+    history: [
+      {
+        action: { type: String, required: true },
+        timestamp: { type: Date, default: Date.now },
+        details: { type: String },
+      },
+    ],
   },
   { timestamps: true, versionKey: false }
 );

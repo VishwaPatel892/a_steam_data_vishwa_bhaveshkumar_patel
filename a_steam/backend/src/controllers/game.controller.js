@@ -15,12 +15,22 @@ const getAllGames = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc    Get a single game by ID
- * @route   GET /api/v1/games/:id
+ * @desc    Get a random game
+ * @route   GET /api/v1/games/random
+ * @access  Public
+ */
+const getRandomGame = asyncHandler(async (req, res) => {
+  const game = await gameService.getRandomGame();
+  res.status(200).json(apiResponse.success("Random game fetched successfully", game));
+});
+
+/**
+ * @desc    Get a single game by appid
+ * @route   GET /api/v1/games/:appid
  * @access  Public
  */
 const getGameById = asyncHandler(async (req, res) => {
-  const game = await gameService.getGameById(req.params.id);
+  const game = await gameService.getGameByAppId(req.params.appid);
   res.status(200).json(apiResponse.success("Game fetched successfully", game));
 });
 
@@ -36,21 +46,22 @@ const createGame = asyncHandler(async (req, res) => {
 
 /**
  * @desc    Update a game
- * @route   PUT /api/v1/games/:id
+ * @route   PUT /api/v1/games/:appid
+ * @route   PATCH /api/v1/games/:appid
  * @access  Private/Admin
  */
 const updateGame = asyncHandler(async (req, res) => {
-  const game = await gameService.updateGame(req.params.id, req.body);
+  const game = await gameService.updateGameByAppId(req.params.appid, req.body);
   res.status(200).json(apiResponse.success("Game updated successfully", game));
 });
 
 /**
  * @desc    Delete a game
- * @route   DELETE /api/v1/games/:id
+ * @route   DELETE /api/v1/games/:appid
  * @access  Private/Admin
  */
 const deleteGame = asyncHandler(async (req, res) => {
-  await gameService.deleteGame(req.params.id);
+  await gameService.deleteGameByAppId(req.params.appid);
   res.status(200).json(apiResponse.success("Game deleted successfully"));
 });
 
@@ -64,4 +75,56 @@ const searchGames = asyncHandler(async (req, res) => {
   res.status(200).json(apiResponse.success("Search results fetched", games));
 });
 
-module.exports = { getAllGames, getGameById, createGame, updateGame, deleteGame, searchGames };
+/**
+ * @desc    Get game summary
+ * @route   GET /api/v1/games/:appid/summary
+ * @access  Public
+ */
+const getSummary = asyncHandler(async (req, res) => {
+  const summary = await gameService.getSummary(req.params.appid);
+  res.status(200).json(apiResponse.success("Game summary fetched", summary));
+});
+
+/**
+ * @desc    Get game history
+ * @route   GET /api/v1/games/:appid/history
+ * @access  Private/Admin
+ */
+const getHistory = asyncHandler(async (req, res) => {
+  const history = await gameService.getHistory(req.params.appid);
+  res.status(200).json(apiResponse.success("Game history fetched", history));
+});
+
+/**
+ * @desc    Archive a game
+ * @route   PATCH /api/v1/games/:appid/archive
+ * @access  Private/Admin
+ */
+const archiveGame = asyncHandler(async (req, res) => {
+  const game = await gameService.archiveGame(req.params.appid);
+  res.status(200).json(apiResponse.success("Game archived successfully", game));
+});
+
+/**
+ * @desc    Restore an archived game
+ * @route   PATCH /api/v1/games/:appid/restore
+ * @access  Private/Admin
+ */
+const restoreGame = asyncHandler(async (req, res) => {
+  const game = await gameService.restoreGame(req.params.appid);
+  res.status(200).json(apiResponse.success("Game restored successfully", game));
+});
+
+module.exports = { 
+  getAllGames, 
+  getGameById, 
+  createGame, 
+  updateGame, 
+  deleteGame, 
+  searchGames,
+  getRandomGame,
+  getSummary,
+  getHistory,
+  archiveGame,
+  restoreGame
+};
