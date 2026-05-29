@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const genreSchema = new mongoose.Schema(
   {
@@ -22,4 +22,4 @@ genreSchema.pre("save", function (next) {
   next();
 });
 
-module.exports = mongoose.model("Genre", genreSchema);
+export default mongoose.model("Genre", genreSchema);

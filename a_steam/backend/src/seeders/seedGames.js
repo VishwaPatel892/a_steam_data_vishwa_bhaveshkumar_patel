@@ -1,16 +1,20 @@
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
-const mongoose = require('mongoose');
-const fs = require('fs');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import mongoose from 'mongoose';
+import fs from 'fs';
 
 // Models
-const Game = require('../models/Game.model');
-const Developer = require('../models/Developer.model');
-const Publisher = require('../models/Publisher.model');
-const Genre = require('../models/Genre.model');
+import Game from '../models/Game.model.js';
+import Developer from '../models/Developer.model.js';
+import Publisher from '../models/Publisher.model.js';
+import Genre from '../models/Genre.model.js';
 
 // Database config
-const connectDB = require('../config/db');
+import connectDB from '../database/db.js';
 
 // Cache maps to prevent duplicate queries and optimize speed
 const developerMap = new Map();

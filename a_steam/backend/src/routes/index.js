@@ -1,8 +1,8 @@
-const express = require("express");
-const gameRoutes = require("./game.routes");
+import express from 'express';
+import gameRoutes from './game.routes.js';
 
 const router = express.Router();
 
 router.use("/games", gameRoutes);
 
-module.exports = router;
+export default router;

@@ -2,6 +2,7 @@
   "name": "a_steam_backend",
   "version": "1.0.0",
   "description": "Steam Games REST API Backend",
+  "type": "module",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -9,6 +10,7 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const gameSchema = new mongoose.Schema(
   {
@@ -46,4 +46,4 @@ const gameSchema = new mongoose.Schema(
 // Full-text search index
 gameSchema.index({ name: "text", tags: "text" });
 
-module.exports = mongoose.model("Game", gameSchema);
+export default mongoose.model("Game", gameSchema);

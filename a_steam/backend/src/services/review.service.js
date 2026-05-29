@@ -1,5 +1,5 @@
-const Review = require("../models/Review.model");
-const Game = require("../models/Game.model");
+import Review from '../models/Review.model.js';
+import Game from '../models/Game.model.js';
 
 const getReviewsByGame = async (gameId, { skip, limit, page }) => {
   const [reviews, total] = await Promise.all([
@@ -50,4 +50,4 @@ const deleteReview = async (reviewId, userId) => {
   }
 };
 
-module.exports = { getReviewsByGame, createReview, updateReview, deleteReview };
+export default {  getReviewsByGame, createReview, updateReview, deleteReview  };

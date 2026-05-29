@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 /**
  * Builds a Mongoose filter object from query parameters.
@@ -43,4 +43,4 @@ const buildFilter = (query, refFields = []) => {
   return filter;
 };
 
-module.exports = { buildFilter };
+export {  buildFilter  };

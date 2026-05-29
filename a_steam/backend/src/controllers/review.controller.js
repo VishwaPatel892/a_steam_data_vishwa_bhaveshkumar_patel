@@ -1,7 +1,7 @@
-const asyncHandler = require("../utils/asyncHandler");
-const apiResponse = require("../utils/apiResponse");
-const reviewService = require("../services/review.service");
-const { getPagination } = require("../utils/pagination");
+import asyncHandler from '../utils/asyncHandler.js';
+import apiResponse from '../utils/apiResponse.js';
+import reviewService from '../services/review.service.js';
+import { getPagination } from '../utils/pagination.js';
 
 /**
  * @desc    Get all reviews for a game
@@ -44,4 +44,4 @@ const deleteReview = asyncHandler(async (req, res) => {
   res.status(200).json(apiResponse.success("Review deleted successfully"));
 });
 
-module.exports = { getReviewsByGame, createReview, updateReview, deleteReview };
+export default {  getReviewsByGame, createReview, updateReview, deleteReview  };

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const publisherSchema = new mongoose.Schema(
   {
@@ -16,4 +16,4 @@ const publisherSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false }
 );
 
-module.exports = mongoose.model("Publisher", publisherSchema);
+export default mongoose.model("Publisher", publisherSchema);

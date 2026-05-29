@@ -1,4 +1,4 @@
-const apiResponse = require("../utils/apiResponse");
+import apiResponse from '../utils/apiResponse.js';
 
 /**
  * Validates req.body against a Joi schema.
@@ -26,4 +26,4 @@ const validateQuery = (schema) => (req, res, next) => {
   next();
 };
 
-module.exports = { validateBody, validateQuery };
+export {  validateBody, validateQuery  };

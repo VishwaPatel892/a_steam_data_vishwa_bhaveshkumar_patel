@@ -1,6 +1,6 @@
-const asyncHandler = require("../utils/asyncHandler");
-const apiResponse = require("../utils/apiResponse");
-const authService = require("../services/auth.service");
+import asyncHandler from '../utils/asyncHandler.js';
+import apiResponse from '../utils/apiResponse.js';
+import authService from '../services/auth.service.js';
 
 /**
  * @desc    Register a new user
@@ -43,4 +43,4 @@ const logout = asyncHandler(async (req, res) => {
   res.status(200).json(apiResponse.success("Logged out successfully"));
 });
 
-module.exports = { register, login, getMe, logout };
+export default {  register, login, getMe, logout  };

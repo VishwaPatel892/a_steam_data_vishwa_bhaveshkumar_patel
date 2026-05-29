@@ -1,8 +1,8 @@
-const express = require("express");
-const { validateBody } = require("../middlewares/validate.middleware");
-const { protect, authorize } = require("../middlewares/auth.middleware");
-const { createGameSchema, updateGameSchema } = require("../validators/game.validator");
-const gameController = require("../controllers/game.controller");
+import express from 'express';
+import { validateBody } from '../middlewares/validate.middleware.js';
+import { protect, authorize } from '../middlewares/auth.middleware.js';
+import { createGameSchema, updateGameSchema } from '../validators/game.validator.js';
+import gameController from '../controllers/game.controller.js';
 
 const router = express.Router();
 
@@ -28,4 +28,4 @@ router.get("/:appid/history", gameController.getHistory);
 router.patch("/:appid/archive", gameController.archiveGame);
 router.patch("/:appid/restore", gameController.restoreGame);
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const rateLimit = require("express-rate-limit");
-const { RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX } = require("../config/env");
-const apiResponse = require("../utils/apiResponse");
+import rateLimit from 'express-rate-limit';
+import { RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX } from '../config/env.js';
+import apiResponse from '../utils/apiResponse.js';
 
 /**
  * General API rate limiter — applied to all /api/v1 routes
@@ -28,4 +28,4 @@ const authLimiter = rateLimit({
   },
 });
 
-module.exports = { apiLimiter, authLimiter };
+export {  apiLimiter, authLimiter  };

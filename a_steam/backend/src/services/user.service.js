@@ -1,4 +1,4 @@
-const User = require("../models/User.model");
+import User from '../models/User.model.js';
 
 const getAllUsers = async ({ page, limit, skip }) => {
   const [users, total] = await Promise.all([
@@ -45,4 +45,4 @@ const deleteUser = async (id) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, updateProfile, deleteUser };
+export default {  getAllUsers, getUserById, updateProfile, deleteUser  };

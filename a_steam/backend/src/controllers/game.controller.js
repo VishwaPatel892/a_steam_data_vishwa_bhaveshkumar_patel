@@ -1,7 +1,7 @@
-const asyncHandler = require("../utils/asyncHandler");
-const apiResponse = require("../utils/apiResponse");
-const gameService = require("../services/game.service");
-const { getPagination } = require("../utils/pagination");
+import asyncHandler from '../utils/asyncHandler.js';
+import apiResponse from '../utils/apiResponse.js';
+import gameService from '../services/game.service.js';
+import { getPagination } from '../utils/pagination.js';
 
 /**
  * @desc    Get all games with filters & pagination
@@ -115,7 +115,7 @@ const restoreGame = asyncHandler(async (req, res) => {
   res.status(200).json(apiResponse.success("Game restored successfully", game));
 });
 
-module.exports = { 
+export default {  
   getAllGames, 
   getGameById, 
   createGame, 
@@ -127,4 +127,4 @@ module.exports = {
   getHistory,
   archiveGame,
   restoreGame
-};
+ };

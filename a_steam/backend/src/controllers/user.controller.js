@@ -1,7 +1,7 @@
-const asyncHandler = require("../utils/asyncHandler");
-const apiResponse = require("../utils/apiResponse");
-const userService = require("../services/user.service");
-const { getPagination } = require("../utils/pagination");
+import asyncHandler from '../utils/asyncHandler.js';
+import apiResponse from '../utils/apiResponse.js';
+import userService from '../services/user.service.js';
+import { getPagination } from '../utils/pagination.js';
 
 /**
  * @desc    Get all users
@@ -44,4 +44,4 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).json(apiResponse.success("User deleted successfully"));
 });
 
-module.exports = { getAllUsers, getUserById, updateProfile, deleteUser };
+export default {  getAllUsers, getUserById, updateProfile, deleteUser  };
