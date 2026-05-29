@@ -1,7 +1,7 @@
-const User = require("../models/User.model");
-const bcrypt = require("bcrypt");
-const { BCRYPT_SALT_ROUNDS } = require("../config/env");
-const generateToken = require("../utils/generateToken");
+import User from '../models/User.model.js';
+import bcrypt from 'bcrypt';
+import { BCRYPT_SALT_ROUNDS } from '../config/env.js';
+import generateToken from '../utils/generateToken.js';
 
 /**
  * Register a new user
@@ -58,4 +58,4 @@ const getMe = async (userId) => {
   return user;
 };
 
-module.exports = { register, login, getMe };
+export default {  register, login, getMe  };

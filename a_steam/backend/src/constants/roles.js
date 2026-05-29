@@ -7,4 +7,4 @@ const ROLES = {
   MODERATOR: "moderator",
 };
 
-module.exports = { ROLES };
+export {  ROLES  };

@@ -1,5 +1,5 @@
-const Game = require("../models/Game.model");
-const Review = require("../models/Review.model");
+import Game from '../models/Game.model.js';
+import Review from '../models/Review.model.js';
 
 const getTopRatedGames = async (limit = 10) => {
   return Game.aggregate([
@@ -84,4 +84,4 @@ const getPublisherStats = async () => {
   ]);
 };
 
-module.exports = { getTopRatedGames, getGenreDistribution, getReviewSentiment, getReleasesPerYear, getPublisherStats };
+export default {  getTopRatedGames, getGenreDistribution, getReviewSentiment, getReleasesPerYear, getPublisherStats  };

@@ -1,6 +1,6 @@
-const asyncHandler = require("../utils/asyncHandler");
-const apiResponse = require("../utils/apiResponse");
-const analyticsService = require("../services/analytics.service");
+import asyncHandler from '../utils/asyncHandler.js';
+import apiResponse from '../utils/apiResponse.js';
+import analyticsService from '../services/analytics.service.js';
 
 /**
  * @desc    Get top-rated games
@@ -53,4 +53,4 @@ const getPublisherStats = asyncHandler(async (req, res) => {
   res.status(200).json(apiResponse.success("Publisher stats fetched", data));
 });
 
-module.exports = { getTopRatedGames, getGenreDistribution, getReviewSentiment, getReleasesPerYear, getPublisherStats };
+export default {  getTopRatedGames, getGenreDistribution, getReviewSentiment, getReleasesPerYear, getPublisherStats  };

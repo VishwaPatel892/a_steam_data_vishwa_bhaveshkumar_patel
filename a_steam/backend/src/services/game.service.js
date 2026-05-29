@@ -1,5 +1,5 @@
-const Game = require("../models/Game.model");
-const { buildFilter } = require("../utils/filterBuilder");
+import Game from '../models/Game.model.js';
+import { buildFilter } from '../utils/filterBuilder.js';
 
 const getAllGames = async (query, { page, limit, skip }) => {
   const filter = buildFilter(query, ["genre", "developer", "publisher"]);
@@ -164,7 +164,7 @@ const getRandomGame = async () => {
   return games[0];
 };
 
-module.exports = { 
+export default {  
   getAllGames, 
   getGameByAppId, 
   createGame, 
@@ -176,4 +176,4 @@ module.exports = {
   archiveGame,
   restoreGame,
   getRandomGame
-};
+ };

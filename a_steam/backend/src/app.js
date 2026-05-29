@@ -1,11 +1,13 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
-const rateLimit = require('express-rate-limit');
-const loggerMiddleware = require('./middlewares/logger.middleware');
-const { notFound, errorHandler } = require('./middlewares/error.middleware');
-const ApiResponse = require('./utils/apiResponse');
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
+import rateLimit from 'express-rate-limit';
+import compression from 'compression';
+import loggerMiddleware from './middlewares/logger.middleware.js';
+import { notFound, errorHandler } from './middlewares/error.middleware.js';
+import ApiResponse from './utils/apiResponse.js';
+import routes from './routes/index.js';
 
 const app = express();
 
@@ -34,6 +36,9 @@ app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 // Cookie Parsing Middleware
 app.use(cookieParser());
 
+// Compression Middleware
+app.use(compression());
+
 // Health Route
 app.get('/api/v1/health', (req, res) => {
     res.status(200).json(new ApiResponse(200, null, 'API is running healthily'));
@@ -48,11 +53,11 @@ app.get('/api/v1/system', (req, res) => {
     }, 'System info retrieved successfully'));
 });
 
-const routes = require('./routes/index');
+// Routes
 app.use('/api/v1', routes);
 
 // Error Handling Middleware
 app.use(notFound);
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

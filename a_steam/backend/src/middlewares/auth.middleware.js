@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config/env");
-const User = require("../models/User.model");
-const asyncHandler = require("../utils/asyncHandler");
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../config/env.js';
+import User from '../models/User.model.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 /**
  * Protect routes — verifies JWT and attaches user to req.user
@@ -48,4 +48,4 @@ const authorise = (...roles) => (req, res, next) => {
   next();
 };
 
-module.exports = { protect, authorise, authorize: authorise };
+export { protect, authorise, authorise as authorize };

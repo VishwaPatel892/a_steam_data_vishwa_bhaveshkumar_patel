@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from 'joi';
 
 const createGameSchema = Joi.object({
   steamAppId: Joi.number().integer().min(1).optional(),
@@ -52,7 +52,7 @@ const updateGameSchema = Joi.object({
   "object.min": "At least one field must be provided for update",
 });
 
-module.exports = {
+export { 
   createGameSchema,
   updateGameSchema,
-};
+ };
