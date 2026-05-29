@@ -1,8 +1,10 @@
-import express from 'express';
-import gameRoutes from './game.routes.js';
+import { Router } from 'express';
+import authRoutes  from './auth.routes.js';
+import gameRoutes  from './game.routes.js';
 
-const router = express.Router();
+const router = Router();
 
-router.use("/games", gameRoutes);
+router.use('/auth',  authRoutes);
+router.use('/games', gameRoutes);
 
 export default router;

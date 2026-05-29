@@ -40,8 +40,18 @@ const gameSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true, versionKey: false }
+  { 
+    timestamps: true, 
+    versionKey: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+  }
 );
+
+// Virtual field for popularity based on review count
+gameSchema.virtual('isPopular').get(function() {
+  return this.reviewCount >= 10000;
+});
 
 // Full-text search index
 gameSchema.index({ name: "text", tags: "text" });
