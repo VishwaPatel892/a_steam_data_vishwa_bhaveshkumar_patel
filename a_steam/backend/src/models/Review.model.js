@@ -2,36 +2,22 @@ import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "User is required"],
-    },
-    game: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Game",
-      required: [true, "Game is required"],
-    },
-    rating: {
-      type: Number,
-      required: [true, "Rating is required"],
-      min: [1, "Rating must be at least 1"],
-      max: [5, "Rating cannot exceed 5"],
-    },
-    content: {
-      type: String,
-      required: [true, "Review content is required"],
-      minlength: [10, "Review must be at least 10 characters"],
-      maxlength: [2000, "Review cannot exceed 2000 characters"],
-    },
-    recommended: { type: Boolean, default: true },
+    gameId: { type: mongoose.Schema.Types.ObjectId, ref: 'Game', required: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    isPositive: { type: Boolean, required: true },
+    text: { type: String, maxlength: 2000, default: '' },
+    playtimeAtReview: { type: Number, default: 0 }, // in hours
     helpfulVotes: { type: Number, default: 0 },
-    playtimeAtReview: { type: Number, default: 0 }, // hours
+    funnyVotes: { type: Number, default: 0 },
+    isArchived: { type: Boolean, default: false },
   },
   { timestamps: true, versionKey: false }
 );
 
-// One review per user per game
-reviewSchema.index({ user: 1, game: 1 }, { unique: true });
+// A user can only review a game once
+reviewSchema.index({ gameId: 1, userId: 1 }, { unique: true });
 
-export default mongoose.model("Review", reviewSchema);
+// Optimize for fetching helpful reviews for a game
+reviewSchema.index({ gameId: 1, helpfulVotes: -1 });
+
+export default mongoose.model('Review', reviewSchema);

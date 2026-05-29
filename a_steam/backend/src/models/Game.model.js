@@ -56,4 +56,9 @@ gameSchema.virtual('isPopular').get(function() {
 // Full-text search index
 gameSchema.index({ name: "text", tags: "text" });
 
+// Production Compound Indexes for Query Optimization
+gameSchema.index({ averageRating: -1, price: 1 });
+gameSchema.index({ developer: 1, releaseDate: -1 });
+gameSchema.index({ createdAt: -1 });
+
 export default mongoose.model("Game", gameSchema);

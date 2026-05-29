@@ -1,23 +1,31 @@
 import Game from '../models/Game.model.js';
-import { buildFilter } from '../utils/filterBuilder.js';
+import QueryBuilder from '../utils/QueryBuilder.js';
 
-const getAllGames = async (query, { page, limit, skip }) => {
-  const filter = buildFilter(query, ["genre", "developer", "publisher"]);
-  
-  // Exclude archived games by default unless explicitly asked
-  if (query.includeArchived !== 'true') {
-    filter.isArchived = { $ne: true };
-  }
+const getAllGames = async (queryString) => {
+  // 1. Build main query for fetching documents
+  const features = new QueryBuilder(Game.find({ isArchived: { $ne: true } }), queryString)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  // 2. Build identical query just for counting total documents (skipping pagination)
+  const countFeatures = new QueryBuilder(Game.find({ isArchived: { $ne: true } }), queryString).filter();
 
   const [games, total] = await Promise.all([
-    Game.find(filter)
-      .populate("genre developer publisher", "name slug")
-      .skip(skip)
-      .limit(limit)
-      .lean(),
-    Game.countDocuments(filter),
+    features.query.populate("genre developer publisher", "name slug").lean(),
+    countFeatures.query.countDocuments()
   ]);
-  return { games, total, page, limit, pages: Math.ceil(total / limit) };
+
+  const { page, limit } = features.paginationMeta;
+
+  return { 
+    games, 
+    total, 
+    page, 
+    limit, 
+    pages: Math.ceil(total / limit) 
+  };
 };
 
 const getGameByAppId = async (appid) => {
