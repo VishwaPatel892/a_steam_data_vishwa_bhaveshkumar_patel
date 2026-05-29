@@ -2,13 +2,26 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
 
 /**
- * Generates a signed JWT for the given user ID.
- *
- * @param {string} userId - MongoDB ObjectId of the user
- * @returns {string} Signed JWT string
+ * Sign a JWT for the given userId
+ * @param {string} userId  - MongoDB ObjectId
+ * @returns {string}       - signed JWT
  */
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-};
+const generateToken = (userId) =>
+  jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
+/**
+ * Verify and decode a JWT
+ * @param {string} token
+ * @returns {{ id: string, iat: number, exp: number }}
+ * @throws on expired / invalid token
+ */
+const verifyToken = (token) => jwt.verify(token, JWT_SECRET);
+
+/**
+ * Decode WITHOUT verifying signature (useful for reading exp without throwing)
+ * @param {string} token
+ */
+const decodeToken = (token) => jwt.decode(token);
+
+export { generateToken, verifyToken, decodeToken };
 export default generateToken;
