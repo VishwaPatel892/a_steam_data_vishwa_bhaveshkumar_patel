@@ -12,11 +12,20 @@ import routes from './routes/index.js';
 const app = express();
 
 // Security Middleware
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
+
 app.use(helmet());
 app.use(cors({
     origin: process.env.CORS_ORIGIN || '*',
     credentials: true
 }));
+
+// Data Sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data Sanitization against XSS
+app.use(xss());
 
 // Rate Limiting
 const limiter = rateLimit({
