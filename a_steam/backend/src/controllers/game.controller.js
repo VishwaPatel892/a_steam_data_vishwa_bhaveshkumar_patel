@@ -1,7 +1,6 @@
 import asyncHandler from '../utils/asyncHandler.js';
 import apiResponse from '../utils/apiResponse.js';
 import gameService from '../services/game.service.js';
-import { getPagination } from '../utils/pagination.js';
 
 /**
  * @desc    Get all games with filters & pagination
@@ -9,8 +8,7 @@ import { getPagination } from '../utils/pagination.js';
  * @access  Public
  */
 const getAllGames = asyncHandler(async (req, res) => {
-  const pagination = getPagination(req.query);
-  const result = await gameService.getAllGames(req.query, pagination);
+  const result = await gameService.getAllGames(req.query);
   res.status(200).json(apiResponse.success("Games fetched successfully", result));
 });
 
