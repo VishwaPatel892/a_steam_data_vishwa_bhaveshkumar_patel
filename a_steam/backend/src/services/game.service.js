@@ -1,4 +1,7 @@
 import Game from '../models/Game.model.js';
+import '../models/Developer.model.js';
+import '../models/Publisher.model.js';
+import '../models/Genre.model.js';
 import QueryBuilder from '../utils/QueryBuilder.js';
 
 const getAllGames = async (queryString) => {
