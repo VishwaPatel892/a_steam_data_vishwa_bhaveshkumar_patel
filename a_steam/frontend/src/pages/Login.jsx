@@ -1,9 +1,11 @@
 
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { Typography, Divider } from '@mui/material';
+import { Typography, Divider, Alert } from '@mui/material';
 import { Input, Button } from '../components';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../store/slices/authSlice';
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email format').required('Email is required'),
@@ -13,13 +15,14 @@ const LoginSchema = Yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
 
-  const handleLogin = (values, { setSubmitting }) => {
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Login values:', values);
-      setSubmitting(false);
+  const dispatch = useDispatch();
+  const { isLoading, error } = useSelector((state) => state.auth);
+
+  const handleLogin = async (values) => {
+    const resultAction = await dispatch(loginUser(values));
+    if (loginUser.fulfilled.match(resultAction)) {
       navigate('/');
-    }, 1000);
+    }
   };
 
   return (
@@ -28,12 +31,18 @@ const Login = () => {
         Sign in to your account
       </Typography>
 
+      {error && (
+        <Alert severity="error" className="mb-6 rounded-lg dark:bg-rose-500/10 dark:text-rose-400 dark:border dark:border-rose-500/20">
+          {error}
+        </Alert>
+      )}
+
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={LoginSchema}
         onSubmit={handleLogin}
       >
-        {({ isSubmitting }) => (
+        {() => (
           <Form className="space-y-4">
             <Input 
               name="email" 
@@ -61,7 +70,7 @@ const Login = () => {
               type="submit" 
               fullWidth 
               size="large" 
-              isLoading={isSubmitting}
+              isLoading={isLoading}
             >
               Sign In
             </Button>
@@ -77,7 +86,7 @@ const Login = () => {
         </Divider>
         <div className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
           Don't have an account?{' '}
-          <Link to="#" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+          <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
             Sign up
           </Link>
         </div>
