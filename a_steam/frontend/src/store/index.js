@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import themeReducer from './slices/themeSlice.js';
+import authReducer from './slices/authSlice.js';
 
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
-    // Add other feature slices here (e.g., auth, games)
+    auth: authReducer,
   },
   devTools: import.meta.env.MODE !== 'production',
 });

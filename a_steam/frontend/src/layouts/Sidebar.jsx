@@ -9,7 +9,7 @@ import {
   Settings,
   ChevronRight
 } from 'lucide-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSidebarOpen } from '../store/slices/themeSlice';
 import { cn } from '../utils/cn';
 
@@ -40,6 +40,7 @@ const menuGroups = [
 const Sidebar = ({ isOpen, isMobile }) => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const handleMobileClose = () => {
     if (isMobile) dispatch(setSidebarOpen(false));
@@ -164,8 +165,8 @@ const Sidebar = ({ isOpen, isMobile }) => {
             "flex items-center gap-3 w-full p-2 rounded-xl transition-all duration-200",
             "hover:bg-gray-100 dark:hover:bg-[#111111] border border-transparent dark:hover:border-white/5"
           )}>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
-              VP
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold flex-shrink-0 uppercase">
+              {user?.name?.charAt(0) || 'U'}
             </div>
             <AnimatePresence>
               {isOpen && (
@@ -175,8 +176,8 @@ const Sidebar = ({ isOpen, isMobile }) => {
                   exit={{ opacity: 0 }}
                   className="flex-1 text-left overflow-hidden"
                 >
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">Vishwa Patel</p>
-                  <p className="text-xs text-gray-500 truncate">Admin</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{user?.name || 'User'}</p>
+                  <p className="text-xs text-gray-500 truncate capitalize">{user?.role || 'Guest'}</p>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -13,11 +13,18 @@ import {
   Settings
 } from 'lucide-react';
 import { toggleTheme, toggleSidebar } from '../store/slices/themeSlice';
+import { logoutUser } from '../store/slices/authSlice';
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const { mode } = useSelector((state) => state.theme);
+  const { user } = useSelector((state) => state.auth);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
+    setShowProfileMenu(false);
+  };
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between px-4 sm:px-6 glass border-b-0 border-gray-200 dark:border-b dark:border-[#27272a]">
@@ -65,8 +72,8 @@ const Navbar = () => {
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             className="flex items-center gap-2 focus:outline-none"
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-sm ring-2 ring-transparent hover:ring-primary-500 transition-all">
-              VP
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-sm ring-2 ring-transparent hover:ring-primary-500 transition-all uppercase">
+              {user?.name?.charAt(0) || 'U'}
             </div>
           </button>
 
@@ -83,8 +90,8 @@ const Navbar = () => {
                   className="absolute right-0 mt-2 w-56 rounded-xl glass-card border border-gray-200 dark:border-[#27272a] shadow-xl z-50 overflow-hidden"
                 >
                   <div className="p-4 border-b border-gray-100 dark:border-[#27272a]">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">Vishwa Patel</p>
-                    <p className="text-xs text-gray-500 truncate">vishwa@example.com</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name || 'User'}</p>
+                    <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
                   </div>
                   <div className="p-2">
                     <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
@@ -95,7 +102,7 @@ const Navbar = () => {
                     </button>
                   </div>
                   <div className="p-2 border-t border-gray-100 dark:border-[#27272a]">
-                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors">
+                    <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors">
                       <LogOut className="w-4 h-4" /> Log out
                     </button>
                   </div>
