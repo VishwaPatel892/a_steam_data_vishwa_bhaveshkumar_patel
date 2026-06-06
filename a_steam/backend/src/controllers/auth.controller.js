@@ -74,6 +74,49 @@ const logout = asyncHandler(async (req, res) => {
   res.status(200).json(ApiResponse.success('Logged out successfully'));
 });
 
+// ─── Auth Extra Flows ─────────────────────────────────────────────────────────
+
+/**
+ * @desc    Forgot password — generates a reset token
+ * @route   POST /api/v1/auth/forgot-password
+ * @access  Public
+ */
+const forgotPassword = asyncHandler(async (req, res) => {
+  const result = await authService.forgotPassword(req.body.email);
+  res.status(200).json(ApiResponse.success(result.message, result));
+});
+
+/**
+ * @desc    Reset password using token
+ * @route   POST /api/v1/auth/reset-password
+ * @access  Public
+ */
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token, newPassword } = req.body;
+  const result = await authService.resetPassword(token, newPassword);
+  res.status(200).json(ApiResponse.success(result.message));
+});
+
+/**
+ * @desc    Verify email using token
+ * @route   POST /api/v1/auth/verify-email
+ * @access  Public
+ */
+const verifyEmail = asyncHandler(async (req, res) => {
+  const result = await authService.verifyEmail(req.body.token);
+  res.status(200).json(ApiResponse.success(result.message));
+});
+
+/**
+ * @desc    Send OTP to email
+ * @route   POST /api/v1/auth/send-otp
+ * @access  Public
+ */
+const sendOtp = asyncHandler(async (req, res) => {
+  const result = await authService.sendOtp(req.body.email);
+  res.status(200).json(ApiResponse.success(result.message, result));
+});
+
 // ─── Admin ───────────────────────────────────────────────────────────────────
 
 /**
@@ -106,4 +149,8 @@ export default {
   logout,
   getAllUsers,
   toggleUserStatus,
+  forgotPassword,
+  resetPassword,
+  verifyEmail,
+  sendOtp,
 };

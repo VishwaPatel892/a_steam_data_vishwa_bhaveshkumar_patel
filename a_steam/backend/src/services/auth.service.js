@@ -1,5 +1,6 @@
 import User from '../models/User.model.js';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { BCRYPT_SALT_ROUNDS } from '../config/env.js';
 import { generateToken } from '../utils/generateToken.js';
 
@@ -111,6 +112,76 @@ const toggleUserStatus = async (userId) => {
   return safeUser(user);
 };
 
+/**
+ * Forgot password — generates a reset token (no email provider; logs to console)
+ */
+const forgotPassword = async (email) => {
+  const user = await User.findOne({ email }).select('+resetPasswordToken +resetPasswordExpire');
+  if (!user) throwErr('No account found with that email address', 404);
+
+  const rawToken = crypto.randomBytes(32).toString('hex');
+  user.resetPasswordToken   = crypto.createHash('sha256').update(rawToken).digest('hex');
+  user.resetPasswordExpire  = new Date(Date.now() + 15 * 60 * 1000); // 15 min
+  await user.save({ validateBeforeSave: false });
+
+  // In production replace this with an email send
+  console.log(`[DEV] Password reset token for ${email}: ${rawToken}`);
+  return { message: 'Reset token sent (check server logs in dev mode)', resetToken: rawToken };
+};
+
+/**
+ * Reset password — consumes the reset token
+ */
+const resetPassword = async (rawToken, newPassword) => {
+  const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  }).select('+resetPasswordToken +resetPasswordExpire');
+
+  if (!user) throwErr('Reset token is invalid or has expired', 400);
+
+  user.password            = await bcrypt.hash(newPassword, BCRYPT_SALT_ROUNDS);
+  user.resetPasswordToken  = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+
+  return { message: 'Password has been reset successfully' };
+};
+
+/**
+ * Verify email — marks the account as email-verified
+ */
+const verifyEmail = async (rawToken) => {
+  const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+  const user = await User.findOne({ emailVerificationToken: hashedToken }).select('+emailVerificationToken +isEmailVerified');
+  if (!user) throwErr('Invalid verification token', 400);
+  if (user.isEmailVerified) return { message: 'Email is already verified' };
+
+  user.isEmailVerified        = true;
+  user.emailVerificationToken = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  return { message: 'Email verified successfully' };
+};
+
+/**
+ * Send OTP — generates a 6-digit OTP (logs to console in dev)
+ */
+const sendOtp = async (email) => {
+  const user = await User.findOne({ email }).select('+otp +otpExpire');
+  if (!user) throwErr('No account found with that email address', 404);
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  user.otp       = otp;
+  user.otpExpire = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+  await user.save({ validateBeforeSave: false });
+
+  // In production replace with SMS / email send
+  console.log(`[DEV] OTP for ${email}: ${otp}`);
+  return { message: 'OTP sent (check server logs in dev mode)', otp };
+};
+
 export default {
   register,
   login,
@@ -119,4 +190,8 @@ export default {
   changePassword,
   getAllUsers,
   toggleUserStatus,
+  forgotPassword,
+  resetPassword,
+  verifyEmail,
+  sendOtp,
 };

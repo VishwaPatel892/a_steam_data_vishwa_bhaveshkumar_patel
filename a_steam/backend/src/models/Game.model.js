@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const gameSchema = new mongoose.Schema(
   {
+    appid: { type: Number, sparse: true },
     steamAppId: { type: Number, unique: true, sparse: true },
     name: {
       type: String,
@@ -16,9 +17,14 @@ const gameSchema = new mongoose.Schema(
     },
     headerImage: { type: String, default: "" },
     releaseDate: { type: Date },
-    developer: [{ type: mongoose.Schema.Types.ObjectId, ref: "Developer" }],
-    publisher: [{ type: mongoose.Schema.Types.ObjectId, ref: "Publisher" }],
-    genre: [{ type: mongoose.Schema.Types.ObjectId, ref: "Genre" }],
+    release_date: { type: String },
+    release_year: { type: mongoose.Schema.Types.Mixed },
+    developer: { type: [String], default: [] },
+    publisher: { type: [String], default: [] },
+    genre: { type: [String], default: [] },
+    genres: { type: [String], default: [] },
+    categories: { type: [String], default: [] },
+    recommendations: { type: mongoose.Schema.Types.Mixed },
     tags: { type: [String], default: [] },
     platforms: {
       windows: { type: Boolean, default: false },

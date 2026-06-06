@@ -7,17 +7,27 @@ import {
   loginSchema,
   updateProfileSchema,
   changePasswordSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  verifyEmailSchema,
+  sendOtpSchema,
 } from '../validators/auth.validation.js';
 
 const router = Router();
 
 // ─── Public routes ───────────────────────────────────────────────────────────
-router.post('/register', validateBody(registerSchema), authController.register);
-router.post('/login',    validateBody(loginSchema),    authController.login);
+router.post('/register',      validateBody(registerSchema), authController.register);
+router.post('/login',         validateBody(loginSchema),    authController.login);
+router.post('/forgot-password', validateBody(forgotPasswordSchema), authController.forgotPassword);
+router.post('/reset-password',  validateBody(resetPasswordSchema),  authController.resetPassword);
+router.post('/verify-email',    validateBody(verifyEmailSchema),    authController.verifyEmail);
+router.post('/send-otp',        validateBody(sendOtpSchema),        authController.sendOtp);
 
 // ─── Protected routes (any authenticated user) ───────────────────────────────
 router.get   ('/me',              protect, authController.getMe);
+router.get   ('/profile',         protect, authController.getMe);
 router.patch ('/me',              protect, validateBody(updateProfileSchema), authController.updateProfile);
+router.patch ('/profile',         protect, validateBody(updateProfileSchema), authController.updateProfile);
 router.patch ('/change-password', protect, validateBody(changePasswordSchema), authController.changePassword);
 router.post  ('/logout',          protect, authController.logout);
 
