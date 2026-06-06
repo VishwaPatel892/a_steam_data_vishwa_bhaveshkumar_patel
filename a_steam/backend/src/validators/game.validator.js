@@ -1,6 +1,7 @@
 import Joi from 'joi';
 
 const createGameSchema = Joi.object({
+  appid: Joi.number().integer().optional(),
   steamAppId: Joi.number().integer().min(1).optional(),
   name: Joi.string().trim().required().messages({
     "string.empty": "Game name is required",
@@ -10,9 +11,14 @@ const createGameSchema = Joi.object({
   shortDescription: Joi.string().max(500).allow("").optional(),
   headerImage: Joi.string().uri().allow("").optional(),
   releaseDate: Joi.date().iso().optional(),
-  developer: Joi.array().items(Joi.string().hex().length(24)).optional(),
-  publisher: Joi.array().items(Joi.string().hex().length(24)).optional(),
-  genre: Joi.array().items(Joi.string().hex().length(24)).optional(),
+  release_date: Joi.string().allow("").optional(),
+  release_year: Joi.any().optional(),
+  developer: Joi.array().items(Joi.string()).optional(),
+  publisher: Joi.array().items(Joi.string()).optional(),
+  genre: Joi.array().items(Joi.string()).optional(),
+  genres: Joi.array().items(Joi.string()).optional(),
+  categories: Joi.array().items(Joi.string()).optional(),
+  recommendations: Joi.any().optional(),
   tags: Joi.array().items(Joi.string()).optional(),
   platforms: Joi.object({
     windows: Joi.boolean().optional(),
@@ -33,9 +39,14 @@ const updateGameSchema = Joi.object({
   shortDescription: Joi.string().max(500).allow("").optional(),
   headerImage: Joi.string().uri().allow("").optional(),
   releaseDate: Joi.date().iso().optional(),
-  developer: Joi.array().items(Joi.string().hex().length(24)).optional(),
-  publisher: Joi.array().items(Joi.string().hex().length(24)).optional(),
-  genre: Joi.array().items(Joi.string().hex().length(24)).optional(),
+  release_date: Joi.string().allow("").optional(),
+  release_year: Joi.any().optional(),
+  developer: Joi.array().items(Joi.string()).optional(),
+  publisher: Joi.array().items(Joi.string()).optional(),
+  genre: Joi.array().items(Joi.string()).optional(),
+  genres: Joi.array().items(Joi.string()).optional(),
+  categories: Joi.array().items(Joi.string()).optional(),
+  recommendations: Joi.any().optional(),
   tags: Joi.array().items(Joi.string()).optional(),
   platforms: Joi.object({
     windows: Joi.boolean().optional(),

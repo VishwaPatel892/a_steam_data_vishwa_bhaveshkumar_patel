@@ -70,3 +70,42 @@ export const changePasswordSchema = Joi.object({
       'any.required': 'New password is required',
     }),
 });
+
+// ─── Forgot Password ─────────────────────────────────────────────────────────
+export const forgotPasswordSchema = Joi.object({
+  email: Joi.string().trim().email().lowercase().required().messages({
+    'string.email': 'Please provide a valid email address',
+    'any.required': 'Email is required',
+  }),
+});
+
+// ─── Reset Password ─────────────────────────────────────────────────────────
+export const resetPasswordSchema = Joi.object({
+  token: Joi.string().required().messages({
+    'any.required': 'Reset token is required',
+  }),
+  newPassword: Joi.string().min(8).max(64)
+    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .required()
+    .messages({
+      'string.min': 'Password must be at least 8 characters',
+      'string.pattern.base':
+        'Password must contain at least one uppercase letter, one lowercase letter, and one number',
+      'any.required': 'New password is required',
+    }),
+});
+
+// ─── Verify Email ─────────────────────────────────────────────────────────
+export const verifyEmailSchema = Joi.object({
+  token: Joi.string().required().messages({
+    'any.required': 'Verification token is required',
+  }),
+});
+
+// ─── Send OTP ─────────────────────────────────────────────────────────
+export const sendOtpSchema = Joi.object({
+  email: Joi.string().trim().email().lowercase().required().messages({
+    'string.email': 'Please provide a valid email address',
+    'any.required': 'Email is required',
+  }),
+});

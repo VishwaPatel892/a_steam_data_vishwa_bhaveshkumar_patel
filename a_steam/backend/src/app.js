@@ -53,15 +53,6 @@ app.get('/api/v1/health', (req, res) => {
     res.status(200).json(new ApiResponse(200, null, 'API is running healthily'));
 });
 
-// System Info Route
-app.get('/api/v1/system', (req, res) => {
-    res.status(200).json(new ApiResponse(200, {
-        platform: process.platform,
-        nodeVersion: process.version,
-        uptime: process.uptime()
-    }, 'System info retrieved successfully'));
-});
-
 // Routes
 app.use('/api/v1', routes);
 
