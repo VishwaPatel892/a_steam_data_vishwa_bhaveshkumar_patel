@@ -4,6 +4,7 @@ import { ThemeProvider, CssBaseline } from '@mui/material';
 import { store } from './store';
 import { createAppTheme } from './app/theme';
 import AppRoutes from './routes';
+import ToastContainer from './components/ToastContainer';
 
 // Separate component to hook into Redux theme state
 const ThemeWrapper = () => {
@@ -23,6 +24,7 @@ const ThemeWrapper = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AppRoutes />
+      <ToastContainer />
     </ThemeProvider>
   );
 };
