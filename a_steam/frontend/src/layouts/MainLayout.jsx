@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useMediaQuery, useTheme as useMuiTheme } from '@mui/material';
 import { setSidebarOpen } from '../store/slices/themeSlice';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import Breadcrumbs from './Breadcrumbs';
+import Footer from './Footer';
 
 const MainLayout = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { sidebarOpen } = useSelector((state) => state.theme);
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
 
-  // Auto-close sidebar on mobile
+  // Auto-close sidebar on mobile, open on desktop
   useEffect(() => {
     if (isMobile) {
       dispatch(setSidebarOpen(false));
@@ -21,21 +24,32 @@ const MainLayout = () => {
     }
   }, [isMobile, dispatch]);
 
+  // Close mobile drawer on route change
+  useEffect(() => {
+    if (isMobile) {
+      dispatch(setSidebarOpen(false));
+    }
+  }, [location.pathname, isMobile, dispatch]);
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 selection:bg-primary-500/30">
-      
+
+      {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} isMobile={isMobile} />
 
+      {/* Main content area */}
       <div className="flex flex-col flex-1 w-full overflow-hidden">
         <Navbar />
-        
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-transparent p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto space-y-6">
+
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-transparent">
+          <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-0">
+            <Breadcrumbs />
             <Outlet />
           </div>
+
+          <Footer />
         </main>
       </div>
-
     </div>
   );
 };

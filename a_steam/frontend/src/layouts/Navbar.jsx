@@ -1,116 +1,79 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Menu, 
-  Search, 
-  Bell, 
-  Sun, 
-  Moon,
-  Command,
-  LogOut,
-  User,
-  Settings
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Menu, Search, Sun, Moon, Command } from 'lucide-react';
 import { toggleTheme, toggleSidebar } from '../store/slices/themeSlice';
-import { logoutUser } from '../store/slices/authSlice';
+import NotificationPanel from './NotificationPanel';
+import UserProfileDropdown from './UserProfileDropdown';
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const { mode } = useSelector((state) => state.theme);
-  const { user } = useSelector((state) => state.auth);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-
-  const handleLogout = async () => {
-    await dispatch(logoutUser());
-    setShowProfileMenu(false);
-  };
+  const [searchFocused, setSearchFocused] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between px-4 sm:px-6 glass border-b-0 border-gray-200 dark:border-b dark:border-[#27272a]">
-      {/* Left section: Hamburger & Search */}
-      <div className="flex items-center gap-4 flex-1">
-        <button 
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between px-4 sm:px-6 glass border-b border-gray-200 dark:border-[#27272a]">
+      {/* ── Left: Hamburger + Search ── */}
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <button
+          id="sidebar-toggle-btn"
           onClick={() => dispatch(toggleSidebar())}
-          className="p-2 -ml-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-[#27272a] transition-colors"
+          className="p-2 -ml-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-[#27272a] transition-colors flex-shrink-0"
+          aria-label="Toggle sidebar"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Global Search Bar - Hidden on small mobile */}
-        <div className="hidden sm:flex items-center max-w-md w-full relative">
-          <Search className="w-4 h-4 absolute left-3 text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Search anything..." 
-            className="w-full bg-gray-100 dark:bg-[#111111] border border-transparent dark:border-[#27272a] text-gray-900 dark:text-white text-sm rounded-full pl-10 pr-12 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all"
+        {/* Search Bar */}
+        <motion.div
+          animate={{ width: searchFocused ? '100%' : 'auto' }}
+          className="hidden sm:flex items-center max-w-sm w-full relative"
+        >
+          <Search
+            className={`w-4 h-4 absolute left-3 transition-colors ${
+              searchFocused ? 'text-primary-500' : 'text-gray-400'
+            }`}
+          />
+          <input
+            id="global-search"
+            type="text"
+            placeholder="Search anything..."
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            className="w-full bg-gray-100 dark:bg-[#111111] border border-transparent focus:border-primary-400 dark:border-[#27272a] dark:focus:border-primary-500 text-gray-900 dark:text-white text-sm rounded-xl pl-10 pr-12 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all placeholder:text-gray-400"
           />
           <div className="absolute right-3 flex items-center gap-1">
-            <kbd className="hidden lg:inline-flex items-center justify-center rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-black px-1.5 font-mono text-[10px] font-medium text-gray-500 dark:text-gray-400">
-              <Command className="w-3 h-3 mr-0.5" /> K
+            <kbd className="hidden lg:inline-flex items-center justify-center rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-black/40 px-1.5 font-mono text-[10px] font-medium text-gray-500 dark:text-gray-400">
+              <Command className="w-3 h-3 mr-0.5" />K
             </kbd>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Right section: Actions & Profile */}
-      <div className="flex items-center gap-2 sm:gap-4">
-        <button 
+      {/* ── Right: Actions ── */}
+      <div className="flex items-center gap-1 sm:gap-2">
+        {/* Theme Toggle */}
+        <button
+          id="theme-toggle-btn"
           onClick={() => dispatch(toggleTheme())}
-          className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-[#27272a] transition-colors relative"
+          className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-[#27272a] transition-colors"
+          aria-label="Toggle theme"
         >
-          {mode === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {mode === 'dark' ? (
+            <Sun className="w-5 h-5 text-amber-400" />
+          ) : (
+            <Moon className="w-5 h-5" />
+          )}
         </button>
 
-        <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-[#27272a] transition-colors relative">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border border-white dark:border-[#0a0a0a]" />
-        </button>
+        {/* Notifications */}
+        <NotificationPanel />
 
-        <div className="relative ml-2">
-          <button 
-            onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-2 focus:outline-none"
-          >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-sm ring-2 ring-transparent hover:ring-primary-500 transition-all uppercase">
-              {user?.name?.charAt(0) || 'U'}
-            </div>
-          </button>
+        {/* Divider */}
+        <div className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-[#27272a] mx-1" />
 
-          {/* Profile Dropdown */}
-          <AnimatePresence>
-            {showProfileMenu && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={() => setShowProfileMenu(false)} />
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 mt-2 w-56 rounded-xl glass-card border border-gray-200 dark:border-[#27272a] shadow-xl z-50 overflow-hidden"
-                >
-                  <div className="p-4 border-b border-gray-100 dark:border-[#27272a]">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name || 'User'}</p>
-                    <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
-                  </div>
-                  <div className="p-2">
-                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
-                      <User className="w-4 h-4" /> Profile
-                    </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
-                      <Settings className="w-4 h-4" /> Settings
-                    </button>
-                  </div>
-                  <div className="p-2 border-t border-gray-100 dark:border-[#27272a]">
-                    <button onClick={handleLogout} className="w-full flex items-center gap-2 px-3 py-2 text-sm text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg transition-colors">
-                      <LogOut className="w-4 h-4" /> Log out
-                    </button>
-                  </div>
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-        </div>
+        {/* User Profile Dropdown */}
+        <UserProfileDropdown />
       </div>
     </header>
   );

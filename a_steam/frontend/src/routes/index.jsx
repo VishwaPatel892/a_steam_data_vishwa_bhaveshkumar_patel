@@ -16,11 +16,15 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import Dashboard from '../pages/Dashboard';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import UsersPage from '../pages/Users';
+import AnalyticsPage from '../pages/Analytics';
+import ProfilePage from '../pages/Profile';
+import SettingsPage from '../pages/Settings';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <ProtectedRoute />, // All children inside will require authentication
+    element: <ProtectedRoute />,
     children: [
       {
         element: <MainLayout />,
@@ -29,13 +33,24 @@ const router = createBrowserRouter([
             index: true,
             element: <Dashboard />,
           },
-          // Restrict users management page strictly to Admins
-          // {
-          //   path: '/users',
-          //   element: <ProtectedRoute allowedRoles={['admin']}><UsersPage /></ProtectedRoute>
-          // }
+          {
+            path: 'users',
+            element: <UsersPage />,
+          },
+          {
+            path: 'analytics',
+            element: <AnalyticsPage />,
+          },
+          {
+            path: 'profile',
+            element: <ProfilePage />,
+          },
+          {
+            path: 'settings',
+            element: <SettingsPage />,
+          },
         ],
-      }
+      },
     ],
   },
   {
@@ -58,7 +73,6 @@ const AppRoutes = () => {
   const { token, isAuthenticated } = useSelector((state) => state.auth);
   const [isInitializing, setIsInitializing] = useState(true);
 
-  // Attempt to silently auto-login / fetch profile if we have a token stored
   useEffect(() => {
     const initAuth = async () => {
       if (token && !isAuthenticated) {
