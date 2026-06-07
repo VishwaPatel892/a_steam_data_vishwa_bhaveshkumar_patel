@@ -26,6 +26,13 @@ router.get('/:id', protect, authorise('admin'), userController.getUserById);
  */
 router.delete('/:id', protect, authorise('admin'), userController.deleteUser);
 
+/**
+ * @desc   Update a user by ID
+ * @route  PUT /api/v1/users/:id
+ * @access Private / Admin
+ */
+router.put('/:id', protect, authorise('admin'), userController.updateUser);
+
 // ─── Protected (any authenticated user) ──────────────────────────────────────
 /**
  * @desc   Update own profile (name, avatar, bio)

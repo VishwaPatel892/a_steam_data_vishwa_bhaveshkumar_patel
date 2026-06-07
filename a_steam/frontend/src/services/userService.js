@@ -53,6 +53,29 @@ const userService = {
     const res = await api.delete(`/users/${id}`);
     return unwrap(res);
   },
+
+  /**
+   * PUT /users/:id  → Admin-only
+   * @param {string} id user ObjectId
+   * @param {object} payload
+   */
+  updateUser: async (id, payload) => {
+    const res = await api.put(`/users/${id}`, payload);
+    return unwrap(res);
+  },
+
+  /**
+   * POST /auth/register → Create a new user
+   * @param {object} payload { name, email, password, role }
+   */
+  createUser: async (payload) => {
+    // For admin creation, we can use the register endpoint
+    // since it returns the user and doesn't explicitly restrict role setting 
+    // unless the backend blocks it (if it blocks role, we might need a dedicated admin endpoint).
+    // Let's use the register endpoint for now.
+    const res = await api.post('/auth/register', payload);
+    return unwrap(res);
+  },
 };
 
 export default userService;
