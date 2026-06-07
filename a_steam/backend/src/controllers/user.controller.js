@@ -44,4 +44,14 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.status(200).json(apiResponse.success("User deleted successfully"));
 });
 
-export default {  getAllUsers, getUserById, updateProfile, deleteUser  };
+/**
+ * @desc    Update user by admin
+ * @route   PUT /api/v1/users/:id
+ * @access  Private/Admin
+ */
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await userService.updateUser(req.params.id, req.body);
+  res.status(200).json(apiResponse.success("User updated successfully", user));
+});
+
+export default {  getAllUsers, getUserById, updateProfile, deleteUser, updateUser  };
