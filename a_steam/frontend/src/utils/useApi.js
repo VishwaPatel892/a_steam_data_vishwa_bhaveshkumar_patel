@@ -100,7 +100,10 @@ const useApi = (defaultOptions = {}) => {
         setLoading(false);
       }
     },
-    [dispatch, defaultOptions]
+    // We intentionally exclude defaultOptions from the dependency array to prevent
+    // infinite render loops if the consumer passes an inline object like: useApi({ show: true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dispatch]
   );
 
   const reset = useCallback(() => {
