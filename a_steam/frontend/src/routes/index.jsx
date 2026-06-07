@@ -20,6 +20,7 @@ import UsersPage from '../pages/Users';
 import AnalyticsPage from '../pages/Analytics';
 import ProfilePage from '../pages/Profile';
 import SettingsPage from '../pages/Settings';
+import FormTest from '../pages/FormTest';
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
         element: <Register />,
       },
     ],
+  },
+  {
+    path: '/form-test',
+    element: <FormTest />,
   },
 ]);
 
