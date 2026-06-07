@@ -43,7 +43,7 @@ const AnalyticsPage = () => {
     genreData: [],
   });
 
-  const { execute, loading, error } = useApi({ showSuccessToast: false, showErrorToast: true });
+  const { execute, loading, error } = useApi();
 
   useEffect(() => {
     const fetchData = async () => {
