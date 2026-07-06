@@ -21,5 +21,3 @@ reviewSchema.index({ gameId: 1, userId: 1 }, { unique: true });
 reviewSchema.index({ gameId: 1, helpfulVotes: -1 });
 
 export default mongoose.model('Review', reviewSchema);
-
-// Model structure verified
