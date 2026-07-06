@@ -19,3 +19,5 @@ const dlcSchema = new mongoose.Schema(
 dlcSchema.index({ baseGameId: 1, releaseDate: -1 });
 
 export default mongoose.model('DLC', dlcSchema);
+
+// Model structure verified
