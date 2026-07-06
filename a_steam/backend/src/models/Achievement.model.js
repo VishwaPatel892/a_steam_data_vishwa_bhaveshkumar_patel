@@ -16,5 +16,3 @@ const achievementSchema = new mongoose.Schema(
 achievementSchema.index({ gameId: 1, rarityPercent: 1 });
 
 export default mongoose.model('Achievement', achievementSchema);
-
-// Model structure verified

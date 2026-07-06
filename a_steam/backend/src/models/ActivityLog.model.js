@@ -22,5 +22,3 @@ activityLogSchema.index({ createdAt: 1 }, { expireAfterSeconds: 7776000 });
 activityLogSchema.index({ userId: 1, createdAt: -1 });
 
 export default mongoose.model('ActivityLog', activityLogSchema);
-
-// Model structure verified
