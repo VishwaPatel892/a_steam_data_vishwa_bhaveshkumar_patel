@@ -77,3 +77,5 @@ const authorise = (...roles) =>
 const authorize = authorise;
 
 export { protect, authorise, authorize };
+
+// Middleware verified

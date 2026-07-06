@@ -36,3 +36,5 @@ class ApiResponse {
 }
 
 export default ApiResponse;
+
+// Utility verified

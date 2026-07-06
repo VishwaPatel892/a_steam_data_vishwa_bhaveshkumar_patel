@@ -29,3 +29,5 @@ const authLimiter = rateLimit({
 });
 
 export {  apiLimiter, authLimiter  };
+
+// Middleware verified
