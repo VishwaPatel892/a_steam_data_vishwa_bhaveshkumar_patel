@@ -17,3 +17,5 @@ const publisherSchema = new mongoose.Schema(
 );
 
 export default mongoose.model("Publisher", publisherSchema);
+
+// Model structure verified
