@@ -94,3 +94,5 @@ class QueryBuilder {
 }
 
 export default QueryBuilder;
+
+// Utility verified
