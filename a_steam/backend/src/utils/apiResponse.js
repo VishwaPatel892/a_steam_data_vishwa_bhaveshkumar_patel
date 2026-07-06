@@ -10,7 +10,7 @@ class ApiResponse {
     this.data       = data;
   }
 
-  // ─── Static Helpers ────────────────────────────────────────────────────────
+  // â”€â”€â”€ Static Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   /**
    * 2xx Success response
@@ -36,5 +36,3 @@ class ApiResponse {
 }
 
 export default ApiResponse;
-
-// Utility verified
