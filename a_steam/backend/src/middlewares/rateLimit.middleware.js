@@ -3,7 +3,7 @@ import { RATE_LIMIT_WINDOW_MS, RATE_LIMIT_MAX } from '../config/env.js';
 import apiResponse from '../utils/apiResponse.js';
 
 /**
- * General API rate limiter — applied to all /api/v1 routes
+ * General API rate limiter â€” applied to all /api/v1 routes
  */
 const apiLimiter = rateLimit({
   windowMs: RATE_LIMIT_WINDOW_MS,
@@ -11,7 +11,7 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (_req, res) => {
-    res.status(429).json(apiResponse.error("Too many requests — please try again later", 429));
+    res.status(429).json(apiResponse.error("Too many requests â€” please try again later", 429));
   },
 });
 
@@ -24,7 +24,7 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (_req, res) => {
-    res.status(429).json(apiResponse.error("Too many auth attempts — please wait 15 minutes", 429));
+    res.status(429).json(apiResponse.error("Too many auth attempts â€” please wait 15 minutes", 429));
   },
 });
 

@@ -1,31 +1,31 @@
 import ApiResponse from '../utils/apiResponse.js';
 
-// ─── 404 Not Found ───────────────────────────────────────────────────────────
+// â”€â”€â”€ 404 Not Found â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const notFound = (req, res, next) => {
-  const err = new Error(`Route not found — ${req.method} ${req.originalUrl}`);
+  const err = new Error(`Route not found â€” ${req.method} ${req.originalUrl}`);
   err.statusCode = 404;
   next(err);
 };
 
-// ─── Global Error Handler ────────────────────────────────────────────────────
+// â”€â”€â”€ Global Error Handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || (res.statusCode !== 200 ? res.statusCode : 500);
   let message    = err.message || 'Internal Server Error';
 
-  // Mongoose: invalid ObjectId  →  404
+  // Mongoose: invalid ObjectId  â†’  404
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
     statusCode = 404;
-    message    = 'Resource not found — invalid ID format';
+    message    = 'Resource not found â€” invalid ID format';
   }
 
-  // Mongoose: unique field violation  →  409
+  // Mongoose: unique field violation  â†’  409
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue || {})[0] || 'field';
     statusCode  = 409;
-    message     = `Duplicate value for '${field}' — please use a different value`;
+    message     = `Duplicate value for '${field}' â€” please use a different value`;
   }
 
-  // Mongoose: validation error  →  422
+  // Mongoose: validation error  â†’  422
   if (err.name === 'ValidationError') {
     statusCode = 422;
     message    = Object.values(err.errors)
@@ -33,21 +33,21 @@ const errorHandler = (err, req, res, next) => {
       .join(', ');
   }
 
-  // JWT: malformed / tampered  →  401
+  // JWT: malformed / tampered  â†’  401
   if (err.name === 'JsonWebTokenError') {
     statusCode = 401;
-    message    = 'Invalid token — please log in again';
+    message    = 'Invalid token â€” please log in again';
   }
 
-  // JWT: expired  →  401
+  // JWT: expired  â†’  401
   if (err.name === 'TokenExpiredError') {
     statusCode = 401;
-    message    = 'Your session has expired — please log in again';
+    message    = 'Your session has expired â€” please log in again';
   }
 
   // Log in development only
   if (process.env.NODE_ENV !== 'production') {
-    console.error(`[ERROR] ${statusCode} — ${message}`);
+    console.error(`[ERROR] ${statusCode} â€” ${message}`);
     if (err.stack) console.error(err.stack);
   }
 

@@ -1,5 +1,5 @@
 // ── API Configuration ──────────────────────────────────────────────────────
-export const API_BASE_URL = '/api/v1';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 /** Axios request timeout in milliseconds */
 export const API_TIMEOUT = 15_000;

@@ -21,6 +21,9 @@ import AnalyticsPage from '../pages/Analytics';
 import ProfilePage from '../pages/Profile';
 import SettingsPage from '../pages/Settings';
 import FormTest from '../pages/FormTest';
+import UXTest from '../pages/UXTest';
+import Games from '../pages/Games';
+import Reviews from '../pages/Reviews';
 
 const router = createBrowserRouter([
   {
@@ -50,6 +53,14 @@ const router = createBrowserRouter([
             path: 'settings',
             element: <SettingsPage />,
           },
+          {
+            path: 'games',
+            element: <Games />,
+          },
+          {
+            path: 'reviews',
+            element: <Reviews />,
+          },
         ],
       },
     ],
@@ -70,6 +81,10 @@ const router = createBrowserRouter([
   {
     path: '/form-test',
     element: <FormTest />,
+  },
+  {
+    path: '/ux-test',
+    element: <UXTest />,
   },
 ]);
 

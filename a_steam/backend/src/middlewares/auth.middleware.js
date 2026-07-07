@@ -3,7 +3,7 @@ import User            from '../models/User.model.js';
 import asyncHandler    from '../utils/asyncHandler.js';
 import ApiResponse     from '../utils/apiResponse.js';
 
-// ─── protect ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ protect â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 /**
  * Verifies JWT from Authorization header (Bearer <token>).
  * Attaches the user document to req.user on success.
@@ -19,7 +19,7 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json(ApiResponse.error('Not authorised — no token provided', 401));
+    return res.status(401).json(ApiResponse.error('Not authorised â€” no token provided', 401));
   }
 
   let decoded;
@@ -29,8 +29,8 @@ const protect = asyncHandler(async (req, res, next) => {
     // Differentiate between expired vs tampered token for better DX
     const msg =
       err.name === 'TokenExpiredError'
-        ? 'Your session has expired — please log in again'
-        : 'Not authorised — invalid token';
+        ? 'Your session has expired â€” please log in again'
+        : 'Not authorised â€” invalid token';
     return res.status(401).json(ApiResponse.error(msg, 401));
   }
 
@@ -48,7 +48,7 @@ const protect = asyncHandler(async (req, res, next) => {
   next();
 });
 
-// ─── authorise / authorize ───────────────────────────────────────────────────
+// â”€â”€â”€ authorise / authorize â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 /**
  * Role-based access control middleware factory.
  * Must be used AFTER `protect`.
