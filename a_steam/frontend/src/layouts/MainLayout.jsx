@@ -32,7 +32,7 @@ const MainLayout = () => {
   }, [location.pathname, isMobile, dispatch]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 selection:bg-primary-500/30">
+    <div className="flex h-screen overflow-hidden bg-[#0B1120] text-white selection:bg-blue-500/30">
 
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} isMobile={isMobile} />
@@ -41,8 +41,8 @@ const MainLayout = () => {
       <div className="flex flex-col flex-1 w-full overflow-hidden">
         <Navbar />
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-transparent">
-          <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-0">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto scrollbar-thin">
+          <div className="max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8">
             <Breadcrumbs />
             <Outlet />
           </div>
