@@ -25,6 +25,7 @@ import UXTest from '../pages/UXTest';
 import Games from '../pages/Games';
 import GenrePage from '../pages/GenrePage';
 import TopRatedPage from '../pages/TopRatedPage';
+import AddGame from '../pages/AddGame';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
           {
             path: 'games/genre',
             element: <GenrePage />,
+          },
+          {
+            path: 'games/add',
+            element: <AddGame />,
           },
           {
             path: 'games/top-rated',

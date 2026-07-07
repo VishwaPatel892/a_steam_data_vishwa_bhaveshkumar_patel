@@ -12,6 +12,7 @@ import {
   ChevronRight,
   UserCircle,
   X,
+  PlusCircle,
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSidebarOpen, toggleSidebar } from '../store/slices/themeSlice';
@@ -31,6 +32,7 @@ const menuGroups = [
       { name: 'All Games', icon: Gamepad2, path: '/games', id: 'nav-games' },
       { name: 'By Genre', icon: Tag, path: '/games/genre', id: 'nav-genre' },
       { name: 'Top Rated', icon: Trophy, path: '/games/top-rated', id: 'nav-toprated' },
+      { name: 'Add Game', icon: PlusCircle, path: '/games/add', id: 'nav-addgame' },
       { name: 'Users', icon: Users, path: '/users', id: 'nav-users' },
     ],
   },
@@ -38,7 +40,6 @@ const menuGroups = [
     title: 'Account',
     items: [
       { name: 'Profile', icon: UserCircle, path: '/profile', id: 'nav-profile' },
-      { name: 'Settings', icon: Settings, path: '/settings', id: 'nav-settings' },
     ],
   },
 ];

@@ -53,11 +53,6 @@ const Navbar = () => {
         {/* Notifications */}
         <NotificationPanel/>
 
-        {/* Settings */}
-        <button className="p-2 rounded-xl text-[#94A3B8] hover:bg-white/[0.06] hover:text-white transition-colors">
-          <Settings className="w-5 h-5"/>
-        </button>
-
         <div className="w-px h-6 bg-white/[0.07] mx-1"/>
 
         {/* User Profile */}
