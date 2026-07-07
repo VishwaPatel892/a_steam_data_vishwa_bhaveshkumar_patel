@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../store/slices/authSlice';
 import { motion } from 'framer-motion';
 import { 
   Mail, 
@@ -75,15 +77,28 @@ const Register = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+  const { isLoading: isAuthLoading } = useSelector((state) => state.auth);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       setIsLoading(true);
-      // Simulate API call
-      setTimeout(() => {
+      try {
+        const resultAction = await dispatch(registerUser({ 
+          fullName: formData.fullName, 
+          email: formData.email, 
+          phone: formData.phone,
+          password: formData.password 
+        }));
+        if (registerUser.fulfilled.match(resultAction)) {
+          navigate('/login');
+        } else {
+          setErrors(prev => ({ ...prev, email: resultAction.payload || 'Registration failed' }));
+        }
+      } finally {
         setIsLoading(false);
-        navigate('/login'); // Redirect to login after successful registration
-      }, 1500);
+      }
     }
   };
 

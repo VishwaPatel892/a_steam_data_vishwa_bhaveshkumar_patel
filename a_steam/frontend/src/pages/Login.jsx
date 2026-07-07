@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../store/slices/authSlice';
 import { motion } from 'framer-motion';
 import { 
   Mail, 
@@ -44,15 +46,24 @@ const Login = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+  const { isLoading: isAuthLoading } = useSelector((state) => state.auth);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
       setIsLoading(true);
-      // Simulate API call
-      setTimeout(() => {
+      try {
+        const resultAction = await dispatch(loginUser({ email: formData.email, password: formData.password }));
+        if (loginUser.fulfilled.match(resultAction)) {
+          navigate('/');
+        } else {
+          // If login fails, you might want to show an error message. For now, we'll set a generic error.
+          setErrors(prev => ({ ...prev, email: resultAction.payload || 'Login failed' }));
+        }
+      } finally {
         setIsLoading(false);
-        navigate('/'); // Redirect to dashboard after "login"
-      }, 1500);
+      }
     }
   };
 

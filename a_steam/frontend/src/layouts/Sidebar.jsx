@@ -4,7 +4,8 @@ import {
   LayoutDashboard,
   Users,
   Gamepad2,
-  MessageSquare,
+  Tag,
+  Trophy,
   LineChart,
   Settings,
   ChevronLeft,
@@ -25,11 +26,12 @@ const menuGroups = [
     ],
   },
   {
-    title: 'Management',
+    title: 'Games',
     items: [
+      { name: 'All Games', icon: Gamepad2, path: '/games', id: 'nav-games' },
+      { name: 'By Genre', icon: Tag, path: '/games/genre', id: 'nav-genre' },
+      { name: 'Top Rated', icon: Trophy, path: '/games/top-rated', id: 'nav-toprated' },
       { name: 'Users', icon: Users, path: '/users', id: 'nav-users' },
-      { name: 'Games', icon: Gamepad2, path: '/games', id: 'nav-games' },
-      { name: 'Reviews', icon: MessageSquare, path: '/reviews', id: 'nav-reviews' },
     ],
   },
   {
@@ -53,10 +55,12 @@ const Sidebar = ({ isOpen, isMobile }) => {
     if (isMobile) dispatch(setSidebarOpen(false));
   };
 
-  const isActive = (path) =>
-    path === '/'
-      ? location.pathname === '/'
-      : location.pathname.startsWith(path);
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/';
+    // Exact match for /games so it doesn't highlight when on /games/genre or /games/top-rated
+    if (path === '/games') return location.pathname === '/games';
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <>
