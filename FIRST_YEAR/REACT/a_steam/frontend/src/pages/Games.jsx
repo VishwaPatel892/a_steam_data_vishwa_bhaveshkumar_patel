@@ -58,7 +58,7 @@ const StatCard = ({ title, value, icon: Icon }) => (
   </div>
 );
 
-const GameCard = ({ game, onDelete }) => {
+const GameCard = ({ game, onDelete, isAdmin }) => {
   const price = game.isFree ? 'Free' : game.price > 0 ? `$${game.price.toFixed(2)}` : 'N/A';
   const genre = game.genre?.[0] || game.genres?.[0] || 'Game';
   const releaseYear = game.release_year || (game.releaseDate ? new Date(game.releaseDate).getFullYear() : '—');
@@ -70,21 +70,15 @@ const GameCard = ({ game, onDelete }) => {
     >
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-slate-900">
-        {getSteamImage(game) ? (
-          <img
-            src={getSteamImage(game)}
-            alt={game.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.style.display = 'none';
-              e.target.nextSibling?.classList?.remove('hidden');
-            }}
-          />
-        ) : null}
-        <div className={`w-full h-full flex items-center justify-center ${getSteamImage(game) ? 'hidden' : ''}`}>
-          <Gamepad2 className="w-12 h-12 text-slate-600" />
-        </div>
+        <img
+          src={getSteamImage(game) || `https://placehold.co/460x215/1e293b/a5b4fc?text=${encodeURIComponent(game.name)}`}
+          alt={game.name}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = `https://placehold.co/460x215/1e293b/a5b4fc?text=${encodeURIComponent(game.name)}`;
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-80" />
 
         {/* Genre badge */}
@@ -132,15 +126,19 @@ const GameCard = ({ game, onDelete }) => {
           </span>
 
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors">
-              <Edit className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => onDelete(game)}
-              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
+            {isAdmin && (
+              <>
+                <button className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors">
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onDelete(game)}
+                  className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </>
+            )}
             <button className="px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg transition-colors flex items-center gap-1">
               <Info className="w-3 h-3" /> Details
             </button>
@@ -202,6 +200,8 @@ const Games = () => {
     total, page, pages, loading, error,
     search, sort, genreFilter, selectedGame, deleteModalOpen,
   } = useSelector((state) => state.games);
+  const { user } = useSelector((state) => state.auth);
+  const isAdmin = user?.role === 'admin';
 
   // Safety: always ensure these are arrays regardless of API shape
   const games    = Array.isArray(rawGames)    ? rawGames    : [];
@@ -268,10 +268,12 @@ const Games = () => {
               {total > 0 ? `${total.toLocaleString()} games in your database` : 'Manage your game collection'}
             </p>
           </div>
-          <button className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-600/20 text-sm font-bold transition-all w-full md:w-auto justify-center">
-            <Plus className="w-4 h-4" />
-            Add New Game
-          </button>
+          {isAdmin && (
+            <button className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl shadow-lg shadow-indigo-600/20 text-sm font-bold transition-all w-full md:w-auto justify-center">
+              <Plus className="w-4 h-4" />
+              Add New Game
+            </button>
+          )}
         </div>
 
         {/* Stats */}
@@ -294,18 +296,15 @@ const Games = () => {
                 transition={{ duration: 0.5 }}
                 className="absolute inset-0"
               >
-                {getSteamImage(currentFeatured) ? (
-                  <img
-                    src={getSteamImage(currentFeatured)}
-                    alt={currentFeatured?.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
-                  />
-                ) : (
-                  <div className="w-full h-full bg-slate-900 flex items-center justify-center">
-                    <Gamepad2 className="w-24 h-24 text-slate-700" />
-                  </div>
-                )}
+                <img
+                  src={getSteamImage(currentFeatured) || `https://placehold.co/800x400/1e293b/a5b4fc?text=${encodeURIComponent(currentFeatured?.name || 'Game')}`}
+                  alt={currentFeatured?.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { 
+                    e.target.onerror = null; 
+                    e.target.src = `https://placehold.co/800x400/1e293b/a5b4fc?text=${encodeURIComponent(currentFeatured?.name || 'Game')}`; 
+                  }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
 
                 <div className="absolute inset-0 p-8 md:p-12 flex flex-col justify-center max-w-2xl">
@@ -417,7 +416,7 @@ const Games = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {newest.slice(0, 4).map((game) => (
-                <GameCard key={game._id} game={game} onDelete={(g) => dispatch(openDeleteModal(g))} />
+                <GameCard key={game._id} game={game} onDelete={(g) => dispatch(openDeleteModal(g))} isAdmin={isAdmin} />
               ))}
             </div>
           </div>
@@ -458,7 +457,7 @@ const Games = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {games.map((game) => (
-                <GameCard key={game._id} game={game} onDelete={(g) => dispatch(openDeleteModal(g))} />
+                <GameCard key={game._id} game={game} onDelete={(g) => dispatch(openDeleteModal(g))} isAdmin={isAdmin} />
               ))}
             </div>
           )}
