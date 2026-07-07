@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser, clearError } from '../store/slices/authSlice';
 import { motion } from 'framer-motion';
 import { 
   Mail, 
@@ -15,10 +17,21 @@ import {
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoading, error: authError, isAuthenticated } = useSelector((state) => state.auth);
+  
   const [formData, setFormData] = useState({ email: '', password: '', rememberMe: false });
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({ email: '', password: '' });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+    return () => {
+      if (authError) dispatch(clearError());
+    };
+  }, [isAuthenticated, navigate, dispatch, authError]);
 
   const validate = () => {
     let isValid = true;
@@ -44,15 +57,13 @@ const Login = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      setIsLoading(true);
-      // Simulate API call
-      setTimeout(() => {
-        setIsLoading(false);
-        navigate('/'); // Redirect to dashboard after "login"
-      }, 1500);
+      const resultAction = await dispatch(loginUser({ email: formData.email, password: formData.password }));
+      if (loginUser.fulfilled.match(resultAction)) {
+        navigate('/');
+      }
     }
   };
 
@@ -74,8 +85,8 @@ const Login = () => {
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-between p-12 h-full w-full">
           <div className="flex items-center gap-3 text-white">
-            <Hexagon className="w-8 h-8 text-blue-400" />
-            <span className="text-xl font-bold tracking-tight">NexusUI</span>
+            <Hexagon className="w-8 h-8 text-indigo-400" />
+            <span className="text-xl font-bold tracking-tight">A-Steam</span>
           </div>
 
           <div className="max-w-md">
@@ -115,14 +126,20 @@ const Login = () => {
         >
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 lg:hidden text-gray-900 dark:text-white mb-8">
-            <Hexagon className="w-8 h-8 text-blue-600 dark:text-blue-500" />
-            <span className="text-xl font-bold tracking-tight">NexusUI</span>
+            <Hexagon className="w-8 h-8 text-indigo-600 dark:text-indigo-500" />
+            <span className="text-xl font-bold tracking-tight">A-Steam</span>
           </div>
 
           <div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">Welcome back</h2>
             <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">Please enter your details to sign in.</p>
           </div>
+
+          {authError && (
+            <div className="p-4 bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-800 rounded-xl">
+              <p className="text-sm text-rose-600 dark:text-rose-400">{authError}</p>
+            </div>
+          )}
 
           {/* Social Logins */}
           <div className="grid grid-cols-2 gap-4">
