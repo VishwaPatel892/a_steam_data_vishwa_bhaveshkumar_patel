@@ -1,0 +1,27 @@
+{
+  "name": "a_steam_backend",
+  "version": "1.0.0",
+  "description": "Steam Games REST API Backend",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^7.2.0",
+    "joi": "^18.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.24.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
