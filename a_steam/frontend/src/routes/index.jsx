@@ -23,7 +23,8 @@ import SettingsPage from '../pages/Settings';
 import FormTest from '../pages/FormTest';
 import UXTest from '../pages/UXTest';
 import Games from '../pages/Games';
-import Reviews from '../pages/Reviews';
+import GenrePage from '../pages/GenrePage';
+import TopRatedPage from '../pages/TopRatedPage';
 
 const router = createBrowserRouter([
   {
@@ -58,8 +59,12 @@ const router = createBrowserRouter([
             element: <Games />,
           },
           {
-            path: 'reviews',
-            element: <Reviews />,
+            path: 'games/genre',
+            element: <GenrePage />,
+          },
+          {
+            path: 'games/top-rated',
+            element: <TopRatedPage />,
           },
         ],
       },
