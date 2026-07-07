@@ -86,13 +86,13 @@ const Sidebar = ({ isOpen, isMobile }) => {
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className={cn(
           'fixed md:sticky top-0 left-0 z-50 h-screen flex flex-col',
-          'bg-white dark:bg-[#0a0a0a]',
-          'border-r border-gray-200 dark:border-[#27272a]',
-          'shadow-xl md:shadow-none overflow-hidden flex-shrink-0'
+          'bg-[#080f1c]',
+          'border-r border-white/[0.06]',
+          'overflow-hidden flex-shrink-0'
         )}
       >
         {/* ── Logo & Close/Collapse ── */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-[#27272a] flex-shrink-0">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
           <div className="flex items-center gap-3 overflow-hidden">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-extrabold text-base flex-shrink-0 shadow">
               A
@@ -103,7 +103,7 @@ const Sidebar = ({ isOpen, isMobile }) => {
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -8 }}
-                  className="font-bold text-lg text-gray-900 dark:text-white whitespace-nowrap"
+                  className="font-bold text-lg text-white whitespace-nowrap"
                 >
                   A-Steam
                 </motion.span>
@@ -147,7 +147,7 @@ const Sidebar = ({ isOpen, isMobile }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-600 whitespace-nowrap"
+                    className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-widest text-[#475569] whitespace-nowrap"
                   >
                     {group.title}
                   </motion.p>
@@ -167,15 +167,15 @@ const Sidebar = ({ isOpen, isMobile }) => {
                       className={cn(
                         'group relative flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200',
                         active
-                          ? 'text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-500/10'
-                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
+                          ? 'text-[#3B82F6] bg-[#3B82F6]/10'
+                          : 'text-[#94A3B8] hover:text-white hover:bg-white/[0.06]'
                       )}
                     >
                       {/* Active pill */}
                       {active && (
                         <motion.div
                           layoutId="sidebar-active-indicator"
-                          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary-600 dark:bg-primary-400 rounded-r-full"
+                          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-[#3B82F6] rounded-r-full"
                         />
                       )}
 
@@ -183,8 +183,8 @@ const Sidebar = ({ isOpen, isMobile }) => {
                         className={cn(
                           'w-5 h-5 flex-shrink-0 transition-colors',
                           active
-                            ? 'text-primary-600 dark:text-primary-400'
-                            : 'group-hover:text-gray-900 dark:group-hover:text-white'
+                            ? 'text-[#3B82F6]'
+                            : 'group-hover:text-white'
                         )}
                       />
 
@@ -197,7 +197,7 @@ const Sidebar = ({ isOpen, isMobile }) => {
                             transition={{ duration: 0.15 }}
                             className={cn(
                               'font-medium text-sm whitespace-nowrap overflow-hidden',
-                              active ? 'text-primary-700 dark:text-primary-300' : ''
+                              active ? 'text-[#3B82F6]' : ''
                             )}
                           >
                             {item.name}
@@ -213,11 +213,11 @@ const Sidebar = ({ isOpen, isMobile }) => {
         </nav>
 
         {/* ── User Card ── */}
-        <div className="p-3 border-t border-gray-200 dark:border-[#27272a] flex-shrink-0">
+        <div className="p-3 border-t border-white/[0.06] flex-shrink-0">
           <Link
             to="/profile"
             onClick={handleMobileClose}
-            className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-[#111111] transition-all duration-200 group"
+            className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.06] transition-all duration-200 group"
           >
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0 ring-2 ring-transparent group-hover:ring-primary-500/30 transition-all uppercase">
               {user?.name?.charAt(0) || 'U'}

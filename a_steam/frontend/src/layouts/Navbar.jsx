@@ -1,79 +1,67 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
-import { Menu, Search, Sun, Moon, Command } from 'lucide-react';
-import { toggleTheme, toggleSidebar } from '../store/slices/themeSlice';
+import { Menu, Search, Command, Settings, X } from 'lucide-react';
+import { toggleSidebar } from '../store/slices/themeSlice';
 import NotificationPanel from './NotificationPanel';
 import UserProfileDropdown from './UserProfileDropdown';
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { mode } = useSelector((state) => state.theme);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [searchVal, setSearchVal]         = useState('');
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between px-4 sm:px-6 glass border-b border-gray-200 dark:border-[#27272a]">
-      {/* ── Left: Hamburger + Search ── */}
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between px-4 sm:px-6"
+      style={{
+        background: 'rgba(11,17,32,0.85)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+
+      {/* ── Left ── */}
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <button
-          id="sidebar-toggle-btn"
-          onClick={() => dispatch(toggleSidebar())}
-          className="p-2 -ml-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-[#27272a] transition-colors flex-shrink-0"
-          aria-label="Toggle sidebar"
-        >
-          <Menu className="w-5 h-5" />
+        <button id="sidebar-toggle-btn" onClick={() => dispatch(toggleSidebar())}
+          className="p-2 -ml-1 rounded-xl text-[#94A3B8] hover:bg-white/[0.06] hover:text-white transition-colors flex-shrink-0">
+          <Menu className="w-5 h-5"/>
         </button>
 
-        {/* Search Bar */}
-        <motion.div
-          animate={{ width: searchFocused ? '100%' : 'auto' }}
-          className="hidden sm:flex items-center max-w-sm w-full relative"
-        >
-          <Search
-            className={`w-4 h-4 absolute left-3 transition-colors ${
-              searchFocused ? 'text-primary-500' : 'text-gray-400'
-            }`}
-          />
-          <input
-            id="global-search"
-            type="text"
-            placeholder="Search anything..."
+        {/* Search */}
+        <motion.div animate={{ width: searchFocused ? 340 : 260 }} transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className="hidden sm:flex items-center relative">
+          <Search className={`w-4 h-4 absolute left-3 transition-colors pointer-events-none ${searchFocused ? 'text-[#3B82F6]' : 'text-[#475569]'}`}/>
+          <input id="global-search" type="text" value={searchVal}
+            onChange={e => setSearchVal(e.target.value)}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
-            className="w-full bg-gray-100 dark:bg-[#111111] border border-transparent focus:border-primary-400 dark:border-[#27272a] dark:focus:border-primary-500 text-gray-900 dark:text-white text-sm rounded-xl pl-10 pr-12 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all placeholder:text-gray-400"
-          />
-          <div className="absolute right-3 flex items-center gap-1">
-            <kbd className="hidden lg:inline-flex items-center justify-center rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-black/40 px-1.5 font-mono text-[10px] font-medium text-gray-500 dark:text-gray-400">
-              <Command className="w-3 h-3 mr-0.5" />K
-            </kbd>
-          </div>
+            placeholder="Search games, users, reports…"
+            className="w-full bg-white/[0.04] border border-white/[0.07] focus:border-[#3B82F6]/50 text-white text-sm rounded-xl pl-10 pr-14 py-2 focus:outline-none focus:ring-1 focus:ring-[#3B82F6]/30 transition-all placeholder:text-[#475569]"/>
+          {searchVal && (
+            <button onClick={() => setSearchVal('')} className="absolute right-8 text-[#475569] hover:text-white transition-colors">
+              <X className="w-3.5 h-3.5"/>
+            </button>
+          )}
+          <kbd className="absolute right-3 inline-flex items-center gap-0.5 rounded-md border border-white/10 bg-white/[0.04] px-1.5 font-mono text-[10px] text-[#475569]">
+            <Command className="w-2.5 h-2.5"/>K
+          </kbd>
         </motion.div>
       </div>
 
-      {/* ── Right: Actions ── */}
-      <div className="flex items-center gap-1 sm:gap-2">
-        {/* Theme Toggle */}
-        <button
-          id="theme-toggle-btn"
-          onClick={() => dispatch(toggleTheme())}
-          className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-[#27272a] transition-colors"
-          aria-label="Toggle theme"
-        >
-          {mode === 'dark' ? (
-            <Sun className="w-5 h-5 text-amber-400" />
-          ) : (
-            <Moon className="w-5 h-5" />
-          )}
+      {/* ── Right ── */}
+      <div className="flex items-center gap-1">
+        {/* Notifications */}
+        <NotificationPanel/>
+
+        {/* Settings */}
+        <button className="p-2 rounded-xl text-[#94A3B8] hover:bg-white/[0.06] hover:text-white transition-colors">
+          <Settings className="w-5 h-5"/>
         </button>
 
-        {/* Notifications */}
-        <NotificationPanel />
+        <div className="w-px h-6 bg-white/[0.07] mx-1"/>
 
-        {/* Divider */}
-        <div className="hidden sm:block w-px h-6 bg-gray-200 dark:bg-[#27272a] mx-1" />
-
-        {/* User Profile Dropdown */}
-        <UserProfileDropdown />
+        {/* User Profile */}
+        <UserProfileDropdown/>
       </div>
     </header>
   );
